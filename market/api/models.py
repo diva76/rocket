@@ -12,7 +12,9 @@ STYLE_CHOICES = sorted((item, item) for item in get_all_styles())     # 列出�
 #物品原始信息
 class Product(models.Model):
     id = models.IntegerField(primary_key=True)    #条形码
+    name = models.CharField(max_length=512, default='') #名称
     class_name = models.CharField(max_length=512) #物品分类
+    icon = models.CharField(max_length=2048,default='')     #图片
     unit = models.CharField(max_length=512) #商品单位
     extra = models.CharField(max_length=2048) #其他
     class Meta:
@@ -21,7 +23,10 @@ class Product(models.Model):
 #商品
 class Good(models.Model):
     id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=512, default='') #商品名称
     item_code = models.CharField(max_length=512) #商品编号
+    icon = models.CharField(max_length=2048,default='')     #图片
+    description = models.CharField(max_length=2048,default='')     #图片
     product_id = models.IntegerField(default=0)  #对应产品条码
     merchant_id = models.IntegerField(default=0) #商品对应商户
     store_id = models.IntegerField(default=0)    #商品对应门店
@@ -97,7 +102,7 @@ class Benefit(models.Model):
     value = models.CharField(max_length=512,default=0)	  #优惠值，benefit_type=1表示直减金额；benefit_type=2表示折扣数；benefit_type=3表示满减成都3/200
     related_id = models.IntegerField(default=0)   #相关id,type=1表示商户merchant_id;type=2表示store_id
     status = models.IntegerField(default=0)		  #优惠状态：0-无效；1-有效
-    icon = models.CharField(max_length=512)      #优惠图片icon
+    icon = models.CharField(max_length=512,default='')      #优惠图片icon
     start_date = models.CharField(max_length=128,default='')			  #优惠开始时间
     end_date = models.CharField(max_length=128,default='')			  #优惠结束时间
     merchant_id = models.IntegerField(default=0)  #优惠对应商户id
@@ -121,6 +126,8 @@ class TradeInfo(models.Model):
     store_id = models.IntegerField(default=0)      #门店id
     create_time = models.DateTimeField(auto_now_add=True)
     modify_time = models.DateTimeField(auto_now=True)
+    count=models.IntegerField(default=0)
+    price=models.DecimalField(max_digits=19,decimal_places=2)
     class Meta:
         db_table = 'trade_info'
 
@@ -133,6 +140,11 @@ class Order(models.Model):
     trade_id = models.IntegerField(default=0)     #交易号
     create_time = models.DateTimeField(auto_now_add=True)
     modify_time = models.DateTimeField(auto_now=True)
+    count=models.IntegerField(default=0)
+    paid_price=models.DecimalField(max_digits=19,decimal_places=2)
+    total_price=models.DecimalField(max_digits=19,decimal_places=2)
+    redeem_price=models.DecimalField(max_digits=19,decimal_places=2)
+    store_id=models.IntegerField(default=0)
     class Meta:
         db_table = 'order'
 

@@ -69,7 +69,10 @@ class Migration(migrations.Migration):
             name='Good',
             fields=[
                 ('id', models.AutoField(serialize=False, primary_key=True)),
+                ('name', models.CharField(default=b'', max_length=512)),
                 ('item_code', models.CharField(max_length=512)),
+                ('icon', models.CharField(default=b'', max_length=2048)),
+                ('description', models.CharField(default=b'', max_length=2048)),
                 ('product_id', models.IntegerField(default=0)),
                 ('merchant_id', models.IntegerField(default=0)),
                 ('store_id', models.IntegerField(default=0)),
@@ -144,7 +147,9 @@ class Migration(migrations.Migration):
             name='Product',
             fields=[
                 ('id', models.IntegerField(serialize=False, primary_key=True)),
+                ('name', models.CharField(default=b'', max_length=512)),
                 ('class_name', models.CharField(max_length=512)),
+                ('icon', models.CharField(default=b'', max_length=2048)),
                 ('unit', models.CharField(max_length=512)),
                 ('extra', models.CharField(max_length=2048)),
             ],
