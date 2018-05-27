@@ -8,16 +8,6 @@ LANGUAGE_CHOICES = sorted([(item[1][0], item[0]) for item in LEXERS]) # 得到�
 STYLE_CHOICES = sorted((item, item) for item in get_all_styles())     # 列出所有配色风格
 
 
-class Snippet(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
-    title = models.CharField(max_length=100, blank=True, default='')
-    code = models.TextField()
-    linenos = models.BooleanField(default=False)
-    language = models.CharField(choices=LANGUAGE_CHOICES, default='python', max_length=100)
-    style = models.CharField(choices=STYLE_CHOICES, default='friendly', max_length=100)
-
-    class Meta:
-        ordering = ('created',)
 
 #物品原始信息
 class Product(models.Model):
@@ -73,10 +63,13 @@ class Store(models.Model):
     name = models.CharField(max_length=512)      #门店名称
     status = models.IntegerField(default=0)      #门店状态，0-待审核；1-有效；-1-审核拒绝；-2-删除
     location = models.CharField(max_length=2048) #门店地址
-    icon = models.CharField(max_length=2048)     #门店图片
-    contact = models.CharField(max_length=512)   #门店联系人
-    telephone = models.CharField(max_length=512)     #门店联系电话
-
+    latitude = models.DecimalField(max_digits=10,decimal_places=6,default=0)  #维度
+    longitude = models.DecimalField(max_digits=10,decimal_places=6,default=0) #经度
+    score = models.DecimalField(max_digits=2,decimal_places=1)      #评分
+    icon = models.CharField(max_length=2048,default='')     #门店图片
+    contact = models.CharField(max_length=512,default='')   #门店联系人
+    telephone = models.CharField(max_length=512,default='')     #门店联系电话
+    description = models.CharField(max_length=2048,default='')
     create_time = models.DateTimeField(auto_now_add=True)
     modify_time = models.DateTimeField(auto_now=True)
     class Meta:
@@ -98,21 +91,24 @@ class Custom(models.Model):
 #优惠
 class Benefit(models.Model):
     id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=512,default='')        #优惠券名称
     benefit_type = models.IntegerField(default=0) #优惠类型：1-商品直减；2-打折；3-满减
     type = models.IntegerField(default=0)         #优惠分类：1-商户优惠券（旗下所有门店通用）；2-门店优惠券
-    value = models.CharField(max_length=512)	  #优惠值，benefit_type=1表示直减金额；benefit_type=2表示折扣数；benefit_type=3表示满减成都3/200
+    value = models.CharField(max_length=512,default=0)	  #优惠值，benefit_type=1表示直减金额；benefit_type=2表示折扣数；benefit_type=3表示满减成都3/200
     related_id = models.IntegerField(default=0)   #相关id,type=1表示商户merchant_id;type=2表示store_id
     status = models.IntegerField(default=0)		  #优惠状态：0-无效；1-有效
-    icon = models.CharField(max_length=2048)      #优惠图片icon
-    start_time = models.DateTimeField()			  #优惠开始时间
-    end_time = models.DateTimeField()			  #优惠结束时间
+    icon = models.CharField(max_length=512)      #优惠图片icon
+    start_date = models.CharField(max_length=128,default='')			  #优惠开始时间
+    end_date = models.CharField(max_length=128,default='')			  #优惠结束时间
     merchant_id = models.IntegerField(default=0)  #优惠对应商户id
+    store_id = models.IntegerField(default=0)     #优惠对应门店id
     good_id = models.IntegerField(default=0)      #优惠对应商品id
     product_id = models.IntegerField(default=0)   #优惠对应物品id,如果type=1需要使用这个
     create_time = models.DateTimeField(auto_now_add=True)
     modify_time = models.DateTimeField(auto_now=True)
     class Meta:
         db_table = 'benefit'
+
 
 #交易明细表
 class TradeInfo(models.Model):
